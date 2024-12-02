@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Card from '../../components/ui/card'
 import { useState, useRef } from 'react'
 import WavEncoder from "wav-encoder";
+import { sendFormData } from '../../services/voice-recorder-service'
 
 
 
@@ -11,6 +12,8 @@ function VoiceRecorder() {
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
+    // const audioFile = useRef<Blob | null>(null);
+    const [audioFile, setAudioFile] = useState<Blob | null>(null);
 
     const initializeMediaRecorder = async () => {
         try {
@@ -32,38 +35,27 @@ function VoiceRecorder() {
 
                 // Decode to WebAudio Format
                 const audioBuffer = await decodeAudioBlob(audioBlob);
-    
+
                 // Encode to WAV
                 const wavBuffer = await WavEncoder.encode({
                     sampleRate: audioBuffer.sampleRate,
                     channelData: [audioBuffer.getChannelData(0)],
                 });
-    
+
                 // Create a wav file data
                 const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
-
-                // Download as a file
-                const a = document.createElement('a');
-                const audioUrl = URL.createObjectURL(wavBlob);
-                a.href = audioUrl;
-                a.download = 'recording.wav';
-                a.click();
-
-                console.log('Recording saved as WAV file');
+                setAudioFile(wavBlob);
 
                 // Reset the chunk
                 audioChunksRef.current = [];
             };
-
-            console.log('MediaRecorder initialized.');
 
         } catch (error) {
             console.error('Error accessing media devices:', error);
         }
     };
 
-    React.useEffect(() => {
-        console.log('Hello world!');
+    useEffect(() => {
         initializeMediaRecorder()
     }, []);
 
@@ -93,6 +85,13 @@ function VoiceRecorder() {
         return await audioContext.decodeAudioData(arrayBuffer);
     };
 
+    useEffect(() => {
+        // Send request to server
+        if (audioFile) {
+            sendFormData(audioFile);
+        }
+    }, [audioFile]);
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             {/* <Card
@@ -107,11 +106,11 @@ function VoiceRecorder() {
                     <p className="mb-4 text-gray-700">This is a beautiful view of mountains and lakes. Perfect for nature lovers.</p>
                     {!isRecording ?
                         <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={startRecording}>
-                            Press to start recording
+                            Start recording
                         </button>
                         :
                         <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={stopRecording}>
-                            Press to stop recording
+                            Stop recording
                         </button>
                     }
                 </div>
