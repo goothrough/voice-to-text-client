@@ -1,3 +1,4 @@
+import TranscriptHistoryTable from '../features/transcript-history-table/transcript-history-table'
 import VoiceRecorder from '../features/voice-recorder/voice-recorder'
 
 function Home() {
@@ -5,6 +6,7 @@ function Home() {
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6 text-center">Voice Recorder</h1>
       <VoiceRecorder />
+      <TranscriptHistoryTable />
     </div>
   )
 }

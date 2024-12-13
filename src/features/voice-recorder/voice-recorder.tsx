@@ -1,19 +1,12 @@
-
-import React, { useEffect } from 'react';
-import Card from '../../components/ui/card'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import WavEncoder from "wav-encoder";
-import { getTranscriptHistory, sendFormData } from '../../services/voice-recorder-service'
-import TranscriptHistory from '../../services/model/transcript-history';
-
-
+import { sendFormData } from '../../services/voice-recorder-service'
 
 function VoiceRecorder() {
     const [isRecording, setIsRecording] = useState(false)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
-    const [transcriptHistory, setTranscriptHistory] = useState<TranscriptHistory[]>([])
 
     const initializeMediaRecorder = async () => {
         try {
@@ -92,23 +85,8 @@ function VoiceRecorder() {
         }
     }, [audioFile]);
 
-    useEffect(() => {
-        // Send request to server
-        getTranscriptHistory().then(data => {
-            setTranscriptHistory(data);
-        });
-    }, []);
-
-
-
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            {/* <Card
-                title="Recording"
-                description="This is a beautiful view of mountains and lakes. Perfect for nature lovers."
-                buttonText1="Press to start recording"
-                buttonText2="Press to stop recording"
-            /> */}
+        <div className="flex justify-center items-center p-12 bg-gray-100">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md">
                 <div className="p-4">
                     <h5 className="mb-2 text-2xl font-bold text-gray-900">Recording</h5>
@@ -123,27 +101,6 @@ function VoiceRecorder() {
                         </button>
                     }
                 </div>
-            </div>
-            {/* Table */}
-            <div>
-                <table style={{ borderCollapse: "collapse", width: "100%" }}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Transcript</th>
-                            <th>Created At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {transcriptHistory.map((item: any) => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.transcript}</td>
-                                <td>{item.createdAt}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
             </div>
         </div>
     )
