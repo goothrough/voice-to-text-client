@@ -1,18 +1,11 @@
-
-import React, { useEffect } from 'react';
-import Card from '../../components/ui/card'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import WavEncoder from "wav-encoder";
 import { sendFormData } from '../../services/voice-recorder-service'
 
-
-
 function VoiceRecorder() {
     const [isRecording, setIsRecording] = useState(false)
-
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
-    // const audioFile = useRef<Blob | null>(null);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
 
     const initializeMediaRecorder = async () => {
@@ -93,17 +86,11 @@ function VoiceRecorder() {
     }, [audioFile]);
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            {/* <Card
-                title="Recording"
-                description="This is a beautiful view of mountains and lakes. Perfect for nature lovers."
-                buttonText1="Press to start recording"
-                buttonText2="Press to stop recording"
-            /> */}
+        <div className="flex justify-center items-center p-12 bg-gray-100">
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md">
                 <div className="p-4">
                     <h5 className="mb-2 text-2xl font-bold text-gray-900">Recording</h5>
-                    <p className="mb-4 text-gray-700">This is a beautiful view of mountains and lakes. Perfect for nature lovers.</p>
+                    <p className="mb-4 text-gray-700">Let's start recording and get its transcript.</p>
                     {!isRecording ?
                         <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={startRecording}>
                             Start recording
