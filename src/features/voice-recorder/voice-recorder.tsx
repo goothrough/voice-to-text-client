@@ -1,12 +1,28 @@
 import { useState, useRef, useEffect } from 'react'
 import WavEncoder from "wav-encoder";
 import { sendFormData } from '../../services/voice-recorder-service'
+import Modal from '../../components/modal/modal';
+import { TranscriptResult } from '@/services/model/api-responce';
+
 
 function VoiceRecorder() {
     const [isRecording, setIsRecording] = useState(false)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
+
+    const [transcriptResult, setTranscriptResult] = useState('')
+
+    // Modals
+    const [isOpenModal, setIsOpenModal] = useState(false)
+
+    const openModal = () => {
+        setIsOpenModal(true);
+    }
+
+    const closeModal = () => {
+        setIsOpenModal(false);
+    }
 
     const initializeMediaRecorder = async () => {
         try {
@@ -53,11 +69,14 @@ function VoiceRecorder() {
     }, []);
 
     const startRecording = () => {
-        // Start recording
         if (!mediaRecorderRef.current) {
             return;
         }
 
+        // Initialize transcript result
+        setTranscriptResult('')
+
+        // Start recording
         mediaRecorderRef.current.start();
         setIsRecording(true)
     }
@@ -67,6 +86,7 @@ function VoiceRecorder() {
             return;
         }
 
+        // Stop recording
         mediaRecorderRef.current.stop();
         setIsRecording(false)
     }
@@ -81,7 +101,11 @@ function VoiceRecorder() {
     useEffect(() => {
         // Send request to server
         if (audioFile) {
-            sendFormData(audioFile);
+            sendFormData(audioFile).then((res: TranscriptResult) => {
+                console.log(res)
+                setTranscriptResult(res.transcript)
+                openModal()
+            });
         }
     }, [audioFile]);
 
@@ -102,6 +126,7 @@ function VoiceRecorder() {
                     }
                 </div>
             </div>
+            {isOpenModal && <Modal onClose={closeModal} transcriptResult={transcriptResult} />}
         </div>
     )
 

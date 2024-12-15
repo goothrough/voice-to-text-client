@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getTranscriptHistory } from '../../services/voice-recorder-service'
-import TranscriptHistory from '../../services/model/transcript-history';
+import { TranscriptHistory } from '../../services/model/api-responce';
 
 
 
