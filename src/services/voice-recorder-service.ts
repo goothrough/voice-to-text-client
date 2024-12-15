@@ -12,9 +12,10 @@ export const sendFormData = (file: Blob): Promise<TranscriptResult> => {
         },
     }).then(response => {
         return response.data;
-    }).catch((error: ErrorResponse) => {
+    }).catch(error => {
         console.error(error);
-        throw new Error(error.message);
+        const errorResponse: ErrorResponse = error.response.data;
+        throw new Error(errorResponse.message);
     });
 };
 

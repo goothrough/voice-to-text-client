@@ -18,6 +18,7 @@ function TranscriptHistoryTable({ isDataUpdated, showSpinner, hideSpinner }: Pro
         getTranscriptHistory().then(data => {
             setTranscriptHistory(data);
         }).catch((error: Error) => {
+            // TODO
 
         }).finally(() => {
             hideSpinner();
@@ -27,15 +28,16 @@ function TranscriptHistoryTable({ isDataUpdated, showSpinner, hideSpinner }: Pro
 
 
     return (
-        <div className='pt-5 h-80 overflow-y-auto'>
+        <div className='min-h-24 max-h-96 overflow-y-auto relative'>
             <table className="table-auto">
                 <thead>
-                </thead>
-                <tbody>
-                    <tr className="hover:bg-gray-100">
+                    <tr className="font-semibold bg-white hover:bg-gray-100 sticky top-0 h-20">
                         <td className="border px-4 py-2">Transcript</td>
                         <td className="border px-4 py-2">Created At</td>
                     </tr>
+                </thead>
+                <tbody>
+
                     {transcriptHistory &&
                         (transcriptHistory.map((item: any) => (
                             <tr className="bg-gray-50 hover:bg-gray-100" key={item.id}>

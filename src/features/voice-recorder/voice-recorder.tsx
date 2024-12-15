@@ -6,10 +6,9 @@ import WavEncoder from "wav-encoder";
 import { sendFormData } from '../../services/voice-recorder-service'
 // Components
 import Modal from '../../components/modal/modal';
-import { ErrorResponse, TranscriptResult } from '../../services/model/api-responce';
+import { TranscriptResult } from '../../services/model/api-responce';
 // Icons
-import { HiMicrophone, HiMiniStopCircle } from "react-icons/hi2";
-import LoadingSpinner from '../../components/ui/loading-spinner';
+import { HiMicrophone, HiMiniStopCircle, HiOutlineInformationCircle } from "react-icons/hi2";
 
 interface Prop {
     updateIsDateUpdated: () => void;
@@ -139,8 +138,12 @@ function VoiceRecorder({ updateIsDateUpdated, showSpinner, hideSpinner }: Prop) 
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md">
                 <div className="p-4">
                     <h5 className="mb-2 text-2xl font-bold text-gray-900">Recording</h5>
-                    <p className="mb-4 text-gray-700">
+                    <p className="text-gray-700">
                         Let's start recording and transcribe it.
+                    </p>
+                    <p className='mb-4 text-amber-700 flex items-center'>
+                        <HiOutlineInformationCircle size={18} />
+                        <span className='ml-1'>Recording is up to 20 seconds.</span>
                     </p>
                     <div className='flex justify-center'>
                         {!isRecording ?
