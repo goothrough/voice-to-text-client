@@ -7,3 +7,8 @@ export interface TranscriptHistory {
 export interface TranscriptResult {
     transcript: string;
 }
+
+export interface ErrorResponse {
+    error: string;
+    message: string;
+}

@@ -14,6 +14,8 @@ function TranscriptHistoryTable({ isDataUpdated }: Prop) {
         // Send request to server
         getTranscriptHistory().then(data => {
             setTranscriptHistory(data);
+        }).catch((error: Error) => {
+
         });
 
     }, [isDataUpdated]);

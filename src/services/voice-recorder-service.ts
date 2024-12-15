@@ -1,34 +1,31 @@
 import axios from 'axios';
-import { TranscriptResult, TranscriptHistory } from './model/api-responce'
+import { TranscriptResult, TranscriptHistory, ErrorResponse } from './model/api-responce'
 
-export const sendFormData = async (file: Blob): Promise<TranscriptResult | any> => {
+export const sendFormData = (file: Blob): Promise<TranscriptResult> => {
     const formData = new FormData();
     formData.append('file', file);
 
-    try {
-        const response = await axios.post('http://localhost:8080/convertAudioDataToTranscript', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Accept': 'application/json',
-            },
-        });
-
+    return axios.post('http://localhost:8080/convertAudioDataToTranscript', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+        },
+    }).then(response => {
         return response.data;
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    }).catch((error: ErrorResponse) => {
+        console.error(error);
+        throw new Error(error.message);
+    });
 };
 
-export const getTranscriptHistory = async (): Promise<TranscriptHistory[] | any> => {
-    try {
-        const response = await axios.get('http://localhost:8080/getTranscriptRecords',{
-            
-        });
+export const getTranscriptHistory = (): Promise<TranscriptHistory[]> => {
 
+    return axios.get('http://localhost:8080/getTranscriptRecords', {
+    }).then(response => {
         return response.data;
+    }).catch((error: ErrorResponse) => {
+        console.error(error);
+        throw new Error(error.message);
+    });
 
-    } catch (error) {
-        console.error('Error:', error);
-    }
 }

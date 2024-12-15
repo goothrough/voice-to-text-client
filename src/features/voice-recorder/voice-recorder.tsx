@@ -1,10 +1,15 @@
+// React functions
 import { useState, useRef, useEffect } from 'react'
+// Libraries
 import WavEncoder from "wav-encoder";
+// Functions
 import { sendFormData } from '../../services/voice-recorder-service'
+// Components
 import Modal from '../../components/modal/modal';
-import { TranscriptResult } from '@/services/model/api-responce';
-
+import { ErrorResponse, TranscriptResult } from '../../services/model/api-responce';
+// Icons
 import { HiMicrophone, HiMiniStopCircle } from "react-icons/hi2";
+
 
 interface Prop {
     updateIsDateUpdated: () => void;
@@ -16,6 +21,7 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
     const audioChunksRef = useRef<Blob[]>([]);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
     const [transcriptResult, setTranscriptResult] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [isOpenModal, setIsOpenModal] = useState(false)
 
     const openModal = () => {
@@ -25,9 +31,10 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
     const closeModal = () => {
         setIsOpenModal(false);
 
-        // Initialize audio file and transcript result
+        // Initialize audio file and request result
         setAudioFile(null);
         setTranscriptResult('');
+        setErrorMessage('');
 
         // Trigger updating history table
         updateIsDateUpdated();
@@ -111,9 +118,12 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
     useEffect(() => {
         // Send request to server
         if (audioFile) {
-            sendFormData(audioFile).then((res: TranscriptResult) => {
-                console.log(res)
-                setTranscriptResult(res.transcript);
+            sendFormData(audioFile).then((result: TranscriptResult) => {
+                console.log(result)
+                setTranscriptResult(result.transcript);
+                openModal();
+            }).catch((error: Error) => {
+                setErrorMessage(error.message);
                 openModal();
             });
         }
@@ -140,10 +150,9 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
                             </button>
                         }
                     </div>
-
                 </div>
             </div>
-            {isOpenModal && <Modal onClose={closeModal} transcriptResult={transcriptResult} />}
+            {isOpenModal && <Modal onClose={closeModal} transcriptResult={transcriptResult} errorMessage={errorMessage} />}
         </div>
     )
 
