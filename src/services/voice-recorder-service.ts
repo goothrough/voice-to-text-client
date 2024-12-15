@@ -1,7 +1,7 @@
 import axios from 'axios';
-import TranscriptHistory from './model/transcript-history'
+import { TranscriptResult, TranscriptHistory } from './model/api-responce'
 
-export const sendFormData = async (file: Blob) => {
+export const sendFormData = async (file: Blob): Promise<TranscriptResult | any> => {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -12,7 +12,8 @@ export const sendFormData = async (file: Blob) => {
             },
         });
 
-        console.log('Success:', response.data);
+        return response.data;
+
     } catch (error) {
         console.error('Error:', error);
     }
@@ -22,9 +23,8 @@ export const getTranscriptHistory = async (): Promise<TranscriptHistory[] | any>
     try {
         const response = await axios.get('http://localhost:8080/getTranscriptRecords');
 
-        console.log('Success:', response);
-
         return response.data;
+
     } catch (error) {
         console.error('Error:', error);
     }
