@@ -28,10 +28,10 @@ function TranscriptHistoryTable({ isDataUpdated, showSpinner, hideSpinner }: Pro
 
 
     return (
-        <div className='min-h-24 max-h-96 overflow-y-auto relative'>
+        <div className='min-h-24 max-h-96 overflow-y-auto'>
             <table className="table-auto">
                 <thead>
-                    <tr className="font-semibold bg-white hover:bg-gray-100 sticky top-0 h-20">
+                    <tr className="font-semibold bg-white hover:bg-gray-100 sticky z-0 top-0 h-20">
                         <td className="border px-4 py-2">Transcript</td>
                         <td className="border px-4 py-2">Created At</td>
                     </tr>

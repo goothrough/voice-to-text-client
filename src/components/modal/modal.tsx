@@ -10,8 +10,8 @@ interface Props {
 function Modal({ onClose, transcriptResult, errorMessage }: Props) {
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-slate-300 bg-opacity-60 flex justify-center items-center">
-            <div className="z-10 w-1/2 p-4 bg-white rounded-lg shadow-md border">
+        <div className="fixed z-10 top-0 left-0 w-full h-full bg-slate-300 bg-opacity-60 flex justify-center items-center">
+            <div className="z-20 w-1/2 p-4 bg-white rounded-lg shadow-md border">
                 <h2 className="font-semibold flex items-center">
                     {transcriptResult && <span className="text-lime-600 mr-2">
                         <HiCheckCircle size={20} />
