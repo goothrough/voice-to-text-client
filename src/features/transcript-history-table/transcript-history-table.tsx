@@ -5,17 +5,22 @@ import { TranscriptHistory } from '../../services/model/api-responce';
 
 interface Prop {
     isDataUpdated: boolean;
+    showSpinner: () => void;
+    hideSpinner: () => void;
 }
 
-function TranscriptHistoryTable({ isDataUpdated }: Prop) {
+function TranscriptHistoryTable({ isDataUpdated, showSpinner, hideSpinner }: Prop) {
     const [transcriptHistory, setTranscriptHistory] = useState<TranscriptHistory[]>([])
 
     useEffect(() => {
         // Send request to server
+        showSpinner();
         getTranscriptHistory().then(data => {
             setTranscriptHistory(data);
         }).catch((error: Error) => {
 
+        }).finally(() => {
+            hideSpinner();
         });
 
     }, [isDataUpdated]);
