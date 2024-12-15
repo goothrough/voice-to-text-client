@@ -9,13 +9,15 @@ import Modal from '../../components/modal/modal';
 import { ErrorResponse, TranscriptResult } from '../../services/model/api-responce';
 // Icons
 import { HiMicrophone, HiMiniStopCircle } from "react-icons/hi2";
-
+import LoadingSpinner from '../../components/ui/loading-spinner';
 
 interface Prop {
     updateIsDateUpdated: () => void;
+    showSpinner: () => void;
+    hideSpinner: () => void;
 }
 
-function VoiceRecorder({ updateIsDateUpdated }: Prop) {
+function VoiceRecorder({ updateIsDateUpdated, showSpinner, hideSpinner }: Prop) {
     const [isRecording, setIsRecording] = useState(false)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -118,6 +120,7 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
     useEffect(() => {
         // Send request to server
         if (audioFile) {
+            showSpinner();
             sendFormData(audioFile).then((result: TranscriptResult) => {
                 console.log(result)
                 setTranscriptResult(result.transcript);
@@ -125,7 +128,9 @@ function VoiceRecorder({ updateIsDateUpdated }: Prop) {
             }).catch((error: Error) => {
                 setErrorMessage(error.message);
                 openModal();
-            });
+            }).finally(() => {
+                hideSpinner();
+            })
         }
     }, [audioFile]);
 
