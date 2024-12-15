@@ -9,6 +9,7 @@ export const sendFormData = async (file: Blob): Promise<TranscriptResult | any> 
         const response = await axios.post('http://localhost:8080/convertAudioDataToTranscript', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
             },
         });
 
@@ -21,7 +22,9 @@ export const sendFormData = async (file: Blob): Promise<TranscriptResult | any> 
 
 export const getTranscriptHistory = async (): Promise<TranscriptHistory[] | any> => {
     try {
-        const response = await axios.get('http://localhost:8080/getTranscriptRecords');
+        const response = await axios.get('http://localhost:8080/getTranscriptRecords',{
+            
+        });
 
         return response.data;
 

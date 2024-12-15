@@ -4,16 +4,18 @@ import { sendFormData } from '../../services/voice-recorder-service'
 import Modal from '../../components/modal/modal';
 import { TranscriptResult } from '@/services/model/api-responce';
 
+import { HiMicrophone, HiMiniStopCircle } from "react-icons/hi2";
 
-function VoiceRecorder() {
+interface Prop {
+    updateIsDateUpdated: () => void;
+}
+
+function VoiceRecorder({ updateIsDateUpdated }: Prop) {
     const [isRecording, setIsRecording] = useState(false)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const [audioFile, setAudioFile] = useState<Blob | null>(null);
-
     const [transcriptResult, setTranscriptResult] = useState('')
-
-    // Modals
     const [isOpenModal, setIsOpenModal] = useState(false)
 
     const openModal = () => {
@@ -22,6 +24,13 @@ function VoiceRecorder() {
 
     const closeModal = () => {
         setIsOpenModal(false);
+
+        // Initialize audio file and transcript result
+        setAudioFile(null);
+        setTranscriptResult('');
+
+        // Trigger updating history table
+        updateIsDateUpdated();
     }
 
     const initializeMediaRecorder = async () => {
@@ -65,7 +74,7 @@ function VoiceRecorder() {
     };
 
     useEffect(() => {
-        initializeMediaRecorder()
+        initializeMediaRecorder();
     }, []);
 
     const startRecording = () => {
@@ -73,12 +82,13 @@ function VoiceRecorder() {
             return;
         }
 
-        // Initialize transcript result
-        setTranscriptResult('')
-
         // Start recording
         mediaRecorderRef.current.start();
-        setIsRecording(true)
+        setIsRecording(true);
+
+        // Stop recording in 20 seconds
+        // (Wit.ai suggests that the recording duration is shorter than 20 seconds)
+        setTimeout(() => stopRecording(), 20000);
     }
 
     const stopRecording = async () => {
@@ -88,7 +98,7 @@ function VoiceRecorder() {
 
         // Stop recording
         mediaRecorderRef.current.stop();
-        setIsRecording(false)
+        setIsRecording(false);
     }
 
     // Decode Blob to WebAudio format
@@ -103,8 +113,8 @@ function VoiceRecorder() {
         if (audioFile) {
             sendFormData(audioFile).then((res: TranscriptResult) => {
                 console.log(res)
-                setTranscriptResult(res.transcript)
-                openModal()
+                setTranscriptResult(res.transcript);
+                openModal();
             });
         }
     }, [audioFile]);
@@ -114,16 +124,23 @@ function VoiceRecorder() {
             <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md">
                 <div className="p-4">
                     <h5 className="mb-2 text-2xl font-bold text-gray-900">Recording</h5>
-                    <p className="mb-4 text-gray-700">Let's start recording and get its transcript.</p>
-                    {!isRecording ?
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={startRecording}>
-                            Start recording
-                        </button>
-                        :
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={stopRecording}>
-                            Stop recording
-                        </button>
-                    }
+                    <p className="mb-4 text-gray-700">
+                        Let's start recording and transcribe it.
+                    </p>
+                    <div className='flex justify-center'>
+                        {!isRecording ?
+                            <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={startRecording}>
+                                <HiMicrophone size={18} />
+                                <span className='ml-1'>Start</span>
+                            </button>
+                            :
+                            <button className="flex items-center px-4 py-2  bg-amber-400 text-white rounded hover:bg-amber-600" onClick={stopRecording}>
+                                <HiMiniStopCircle size={18} />
+                                <span className='ml-1'>Stop</span>
+                            </button>
+                        }
+                    </div>
+
                 </div>
             </div>
             {isOpenModal && <Modal onClose={closeModal} transcriptResult={transcriptResult} />}

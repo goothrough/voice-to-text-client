@@ -15,9 +15,9 @@ function Modal({ onClose, transcriptResult }: Props) {
                 </div>
                 <div className="mb-3"></div>
                 <div className="grid justify-items-end">
-                    <button className="px-4 py-2 bg-amber-400 text-white rounded hover:bg-amber-600"
+                    <button className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
                         onClick={onClose}>
-                        Close Modal
+                        Close
                     </button>
                 </div>
 

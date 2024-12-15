@@ -3,8 +3,11 @@ import { getTranscriptHistory } from '../../services/voice-recorder-service'
 import { TranscriptHistory } from '../../services/model/api-responce';
 
 
+interface Prop {
+    isDataUpdated: boolean;
+}
 
-function TranscriptHistoryTable() {
+function TranscriptHistoryTable({ isDataUpdated }: Prop) {
     const [transcriptHistory, setTranscriptHistory] = useState<TranscriptHistory[]>([])
 
     useEffect(() => {
@@ -12,7 +15,8 @@ function TranscriptHistoryTable() {
         getTranscriptHistory().then(data => {
             setTranscriptHistory(data);
         });
-    }, []);
+
+    }, [isDataUpdated]);
 
 
     return (
