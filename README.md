@@ -28,7 +28,7 @@ The development and deployment of the Which Room Client involve the following sk
 
 ## How It Works
 
-You can check out the deployed applications using the link below:  
+You can check out the deployed application using the link below:  
 https://voice-to-text-eight.vercel.app
 
 
