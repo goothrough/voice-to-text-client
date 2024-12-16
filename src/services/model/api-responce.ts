@@ -1,7 +1,7 @@
 export interface TranscriptHistory {
     id: number;
     transcript: string;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export interface TranscriptResult {

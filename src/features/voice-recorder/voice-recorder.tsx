@@ -121,7 +121,6 @@ function VoiceRecorder({ updateIsDateUpdated, showSpinner, hideSpinner }: Prop) 
         if (audioFile) {
             showSpinner();
             sendFormData(audioFile).then((result: TranscriptResult) => {
-                console.log(result)
                 setTranscriptResult(result.transcript);
                 openModal();
             }).catch((error: Error) => {

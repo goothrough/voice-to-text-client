@@ -15,8 +15,23 @@ function TranscriptHistoryTable({ isDataUpdated, showSpinner, hideSpinner }: Pro
     useEffect(() => {
         // Send request to server
         showSpinner();
-        getTranscriptHistory().then(data => {
-            setTranscriptHistory(data);
+        getTranscriptHistory().then(transcriptHistories => {
+            transcriptHistories = transcriptHistories.map(item => {
+                const createdAt = new Date(item.createdAt);
+                const formatedDate = createdAt.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                return {
+                    ...item,
+                    createdAt: formatedDate
+                }
+            });
+            setTranscriptHistory(transcriptHistories);
         }).catch((error: Error) => {
             // TODO
 

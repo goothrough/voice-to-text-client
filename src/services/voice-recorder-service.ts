@@ -12,7 +12,8 @@ export const sendFormData = (file: Blob): Promise<TranscriptResult> => {
             'Accept': 'application/json',
         },
     }).then(response => {
-        return response.data;
+        const transcriptResult: TranscriptResult = response.data;
+        return transcriptResult;
     }).catch(error => {
         console.error(error);
         const errorResponse: ErrorResponse = error.response.data;
@@ -24,10 +25,12 @@ export const getTranscriptHistory = (): Promise<TranscriptHistory[]> => {
 
     return axios.get(BASE_API_URL + '/getTranscriptRecords', {
     }).then(response => {
-        return response.data;
-    }).catch((error: ErrorResponse) => {
+        const transcriptHistories: TranscriptHistory[] = response.data;
+        return transcriptHistories;
+    }).catch(error => {
         console.error(error);
-        throw new Error(error.message);
+        const errorResponse: ErrorResponse = error.response.data;
+        throw new Error(errorResponse.message);
     });
 
 }
